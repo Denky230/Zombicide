@@ -5,7 +5,7 @@ import skills.*;
 import weapons.*;
 
 public class Survivor {
-    private int lives;
+    private int health;
     private int level;
     private String name;
     private String warcry;
@@ -16,7 +16,7 @@ public class Survivor {
         this(name, "", Skills_enum.FAST, new Pan());
     }
     public Survivor(String name, String warcry, Skills_enum skill, Weapon weapon) {
-        this.lives = lives;
+        this.health = health;
         this.level = level;
         this.name = name;
         this.warcry = warcry;
@@ -24,11 +24,11 @@ public class Survivor {
         this.weapon = weapon;
     }
 
-    public int getLives() {
-        return lives;
+    public int getHealth() {
+        return health;
     }
-    public void setLives(int lives) {
-        this.lives = lives;
+    public void setHealth(int health) {
+        this.health = health;
     }
 
     public int getLevel() {

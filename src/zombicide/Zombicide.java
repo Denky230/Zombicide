@@ -22,6 +22,6 @@ public class Zombicide {
         Zombie[] zombieWave_01 = new Zombie[5];
         for (int i = 0; i < zombieWave_01.length; i++){
             zombieWave_01[i] = new Walker();
-        }
+        }      
     }
 }

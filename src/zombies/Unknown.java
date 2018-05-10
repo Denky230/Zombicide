@@ -1,10 +1,16 @@
 
 package zombies;
 
+import skills.Skill;
+
 public class Unknown extends Zombie {
     static public int hiHit;
 
     public Unknown() {
-        super(4, 4);
+        super(2, 3, 1);
+    }
+
+    public int calcHit(Skill skill) {
+    	return super.calcHit(skill) * getDamage();
     }
 }

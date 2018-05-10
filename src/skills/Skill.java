@@ -1,7 +1,7 @@
 
 package skills;
 
-public abstract class Skills {
+public abstract class Skill {
 
 	public void applyEffect() {
 
