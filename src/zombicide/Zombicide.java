@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Arrays;
 
 public class Zombicide {
-    
+
     static Survivor[] myTeam;
-    
+
     public static void main(String[] args) {
         /* FLOOR 01 */
         // Set survivors
@@ -28,13 +28,13 @@ public class Zombicide {
         for (int i = 0; i < zombieHorde.length; i++){
             zombieHorde[i] = new Walker();
         }
-        
+
         fight(zombieHorde);
     }
-    
+
     public static void fight(Zombie[] zombieHorde) {
         int NUM_SURVIVOR_ATTACKS = 3;
-        
+
         // To store zombies with health > 0
         List<Zombie> aliveZombies = Arrays.asList(zombieHorde);
         // To store zombies already attacked, so we can check if target has been already attacked
@@ -42,13 +42,13 @@ public class Zombicide {
         boolean zombieAlreadyHit;
         // Current attack target
         Zombie target;
-                
-        for (Survivor s : myTeam) {            
-            for (int i = 0; i < NUM_SURVIVOR_ATTACKS; i++) {                
-                do {                    
+
+        for (Survivor s : myTeam) {
+            for (int i = 0; i < NUM_SURVIVOR_ATTACKS; i++) {
+                do {
                     // Get a random zombie from the "still alive" zombie pool
                     target =  aliveZombies.get((int)(Math.random() * aliveZombies.size()));
-                    
+
                     // While still remain zombies to be attacked, check whether target has been or not
                     zombieAlreadyHit = false;
                     if (i < zombiesHit.length){
@@ -58,13 +58,13 @@ public class Zombicide {
                                 break;
                             }
                         }
-                    }                    
-                } while (zombieAlreadyHit);                
+                    }
+                } while (zombieAlreadyHit);
                 zombiesHit[i] = target;
-                
+
                 // TO DO: make s hit target / take zombies out of aliveZombies when they die and check if .size() > 0                
                 System.out.println(zombiesHit[i].toString());
-            }            
+            }
         }
     }
 }
