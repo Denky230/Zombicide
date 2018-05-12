@@ -37,13 +37,14 @@ public class Zombicide {
 
         // To store zombies with health > 0
         List<Zombie> aliveZombies = Arrays.asList(zombieHorde);
-        // To store zombies already attacked, so we can check if target has been already attacked
-        Zombie[] zombiesHit = new Zombie[Math.min(aliveZombies.size(), NUM_SURVIVOR_ATTACKS)];
         boolean zombieAlreadyHit;
         // Current attack target
         Zombie target;
 
-        for (Survivor s : myTeam) {
+        for (Survivor s : myTeam) {            
+            // To store zombies attacked, so we can check if target has already been hit
+            Zombie[] zombiesHit = new Zombie[Math.min(aliveZombies.size(), NUM_SURVIVOR_ATTACKS)];
+            
             for (int i = 0; i < NUM_SURVIVOR_ATTACKS; i++) {
                 do {
                     // Get a random zombie from the "still alive" zombie pool
@@ -63,7 +64,7 @@ public class Zombicide {
                 zombiesHit[i] = target;
 
                 // TO DO: make s hit target / take zombies out of aliveZombies when they die and check if .size() > 0                
-                System.out.println(zombiesHit[i].toString());
+                //System.out.println(zombiesHit[i].toString());
             }
         }
     }
