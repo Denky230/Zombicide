@@ -13,7 +13,6 @@ public class Zombicide {
     static Survivor[] myTeam;
 
     public static void main(String[] args) {
-        /* FLOOR 01 */
         // Set survivors
         myTeam = new Survivor[] {
             new Survivor("Rick", "COWABUNGA!", Skills_enum.FAST, new Katana()),
@@ -36,35 +35,23 @@ public class Zombicide {
         int NUM_SURVIVOR_ATTACKS = 3;
 
         // To store zombies with health > 0
-        List<Zombie> aliveZombies = Arrays.asList(zombieHorde);
-        // To store zombies already attacked, so we can check if target has been already attacked
-        Zombie[] zombiesHit = new Zombie[Math.min(aliveZombies.size(), NUM_SURVIVOR_ATTACKS)];
-        boolean zombieAlreadyHit;
+        List<Zombie> zombiesAlive = Arrays.asList(zombieHorde);
         // Current attack target
         Zombie target;
 
         for (Survivor s : myTeam) {
             for (int i = 0; i < NUM_SURVIVOR_ATTACKS; i++) {
-                do {
-                    // Get a random zombie from the "still alive" zombie pool
-                    target =  aliveZombies.get((int)(Math.random() * aliveZombies.size()));
+                // Get a random zombie from the "still alive" zombie pool
+                target =  zombiesAlive.get((int)(Math.random() * zombiesAlive.size()));
 
-                    // While still remain zombies to be attacked, check whether target has been or not
-                    zombieAlreadyHit = false;
-                    if (i < zombiesHit.length){
-                        for (Zombie z : zombiesHit) {
-                            if (target == z) {
-                                zombieAlreadyHit = true;
-                                break;
-                            }
-                        }
-                    }
-                } while (zombieAlreadyHit);
-                zombiesHit[i] = target;
-
-                // TO DO: make s hit target / take zombies out of aliveZombies when they die and check if .size() > 0                
-                System.out.println(zombiesHit[i].toString());
+                System.out.println(target.toString());
+                
+                // TO DO: make s hit target / take zombies out of aliveZombies when they die and check if .size() > 0
+                if (zombiesAlive.remove(target)) {
+                    System.out.println("Zombie slain!");
+                }
             }
+            System.out.println();
         }
     }
 }
