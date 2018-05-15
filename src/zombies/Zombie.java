@@ -48,7 +48,7 @@ public abstract class Zombie {
                 break;
             default:
         }
-        
+
         return base * survivorSkillBonus + random + 5;
     }
 }

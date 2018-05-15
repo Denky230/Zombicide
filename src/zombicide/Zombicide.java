@@ -6,14 +6,13 @@ import skills.*;
 import weapons.*;
 import zombies.*;
 import java.util.List;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Zombicide {
 
     static Survivor[] myTeam;
 
     public static void main(String[] args) {
-        /* FLOOR 01 */
         // Set survivors
         myTeam = new Survivor[] {
             new Survivor("Rick", "COWABUNGA!", Skills_enum.FAST, new Katana()),
@@ -33,39 +32,36 @@ public class Zombicide {
     }
 
     public static void fight(Zombie[] zombieHorde) {
-        int NUM_SURVIVOR_ATTACKS = 3;
+        int NUM_SURVIVOR_ATTACKS = 3;        
+        int target; // Current attack target
 
-        // To store zombies with health > 0
-        List<Zombie> aliveZombies = Arrays.asList(zombieHorde);
-        boolean zombieAlreadyHit;
-        // Current attack target
-        Zombie target;
+        // To store alive zombies' index
+        List<Integer> zombiesAlive = new ArrayList<>();
+        for (int i = 0; i < zombieHorde.length; i++) {
+            zombiesAlive.add(i);
+        }        
+        
+        /* System.out.println("-- Zombie Horde --");
+        for (int i = 0; i < zombieHorde.length; i++) {
+            System.out.println(i + " " + zombieHorde[i].toString());
+        }
+        System.out.println(); */
 
+        System.out.println("-- Survs attacks --");
         for (Survivor s : myTeam) {            
-            // To store zombies attacked, so we can check if target has already been hit
-            Zombie[] zombiesHit = new Zombie[Math.min(aliveZombies.size(), NUM_SURVIVOR_ATTACKS)];
-            
             for (int i = 0; i < NUM_SURVIVOR_ATTACKS; i++) {
-                do {
-                    // Get a random zombie from the "still alive" zombie pool
-                    target =  aliveZombies.get((int)(Math.random() * aliveZombies.size()));
-
-                    // While still remain zombies to be attacked, check whether target has been or not
-                    zombieAlreadyHit = false;
-                    if (i < zombiesHit.length){
-                        for (Zombie z : zombiesHit) {
-                            if (target == z) {
-                                zombieAlreadyHit = true;
-                                break;
-                            }
-                        }
-                    }
-                } while (zombieAlreadyHit);
-                zombiesHit[i] = target;
-
-                // TO DO: make s hit target / take zombies out of aliveZombies when they die and check if .size() > 0                
-                //System.out.println(zombiesHit[i].toString());
+                // Get a random zombie from the "still alive" zombie pool
+                target =  zombiesAlive.get((int)(Math.random() * zombiesAlive.size()));
+                
+                System.out.println(target + " " + zombieHorde[target].toString());                
+                
+                // TO DO: make s hit target
+                 
+                zombiesAlive.remove(zombiesAlive.indexOf(target));
+                if (zombiesAlive.isEmpty())
+                    return;
             }
+            System.out.println();
         }
     }
 }
