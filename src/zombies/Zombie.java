@@ -23,6 +23,10 @@ public abstract class Zombie {
     public int getSpeed() {
         return speed;
     }
+    
+    public boolean hit() {
+        return (int)(Math.random() + 0.5) == 1;
+    }
 
     public int calcHit(Skill skill) {
         int random = (int)(Math.random() * 10) + 1;

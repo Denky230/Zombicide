@@ -28,14 +28,14 @@ public class Survivor {
         return health;
     }
     public void setHealth(int health) {
-        this.health = health;
+        this.health = health >= 0 ? health : 0;
     }
 
     public int getLevel() {
         return level;
     }
     public void setLevel(int level) {
-        this.level = level;
+        this.level = level >= 0 ? level : 0;
     }
 
     public String getName() {
@@ -67,11 +67,15 @@ public class Survivor {
         if (weapon != null)
             System.out.println(warcry);
     }
-    
+
     public boolean hasWeapon() {
         return getWeapon() != null;
     }
     public void destroyWeapon() {
         setWeapon(null);        
+    }
+
+    public boolean hit() {
+        return (int)(Math.random() + 0.5) == 1;
     }
 }

@@ -11,10 +11,15 @@ public class Unknown extends Zombie {
     }
 
     public boolean swipe() {
-    	// TO DO: random btwn 1 - 10; if result > 7, hit again
+    	/*
+        TO DO: random btwn 1 - 10; if result > 7, hit again
+        maybe include this in super.hit() (override hit)
+        */
+
         return false;
     }
 
+    @Override
     public int calcHit(Skill skill) {
     	return super.calcHit(skill) * getDamage();
     }
