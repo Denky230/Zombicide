@@ -28,10 +28,11 @@ public class Zombicide {
             zombieHorde[i] = new Walker();
         }
 
+        // TO DO: wrap up fight (fight(){while team || zombies alive})
+        fight(myTeam, zombieHorde);
+        
         survivorsGo(zombieHorde);
         zombiesGo(zombieHorde);
-
-        // TO DO: wrap up fight (fight(){while team || zombies alive})
     }
 
     public static void survivorsGo(Zombie[] zombieHorde) {
@@ -78,6 +79,8 @@ public class Zombicide {
                 System.out.println();
             }
         }
+        
+        
     }
 
     public static void zombiesGo(Zombie[] zombieHorde) {
@@ -87,14 +90,14 @@ public class Zombicide {
         System.out.println("-- ZombieHorde attacks --");
         for (Zombie z : zombieHorde) {
             for (int i = 0; i < NUM_ZOMBIE_ATTACKS; i++) {
-                // Get a random zombie from the "still alive" zombie pool
+                // Get a random survivor's index
                 target =  (int)(Math.random() * myTeam.length);
 
                 // Make z hit target
-                if (z.hit()) {
-                    // TO DO: make z do damage
+                if (z.hit()) {                    
                     myTeam[target].setHealth(myTeam[target].getHealth() - z.getDamage());
                     System.out.println(myTeam[target].getName() + " was hit! HP remaining: " + myTeam[target].getHealth());
+                    // TO DO: print diff text if target dies or not
                 } else {
                     System.out.println("Fail");
                 }
@@ -103,5 +106,16 @@ public class Zombicide {
             }
             System.out.println();
         }
+    }
+    
+    public static void fight(Survivor[] survivors, Zombie[] zombieHorde) {
+        /*
+        List survs
+        List zombies
+        
+        while (!survs.isEmpty && !zombies.isEmpty) {
+            
+        }
+        */
     }
 }
