@@ -53,6 +53,6 @@ public abstract class Zombie {
             default:
         }
 
-        return base * survivorSkillBonus + random + 5;
+        return base * survivorSkillBonus + random;
     }
 }

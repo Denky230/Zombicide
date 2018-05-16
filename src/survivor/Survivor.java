@@ -72,7 +72,7 @@ public class Survivor {
         return getWeapon() != null;
     }
     public void destroyWeapon() {
-        setWeapon(null);        
+        setWeapon(null);
     }
 
     public boolean hit() {
