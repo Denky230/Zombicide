@@ -15,10 +15,10 @@ public class Zombicide {
     public static void main(String[] args) {
         int NUM_FLOORS = 3;
         int currFloor = 1;
-        
+
         int HORDE_SIZE = 8;
         List<Zombie> zombieHorde = new ArrayList<>();
-        
+
         // Set survivors
         myTeam = new Survivor[] {
             new Survivor("Rick", "COWABUNGA!", Skills_enum.FAST, new Katana()),
@@ -26,8 +26,8 @@ public class Zombicide {
             new Survivor("John", "COME AT ME!", Skills_enum.STRONG, new Shotgun()),
             new Survivor("Manueh"),
             new Survivor("Carla")
-        };      
-                
+        };
+
         // GAME LOOP
         while (currFloor <= NUM_FLOORS) {
             // Set floor specifics
@@ -37,24 +37,56 @@ public class Zombicide {
                        zombieHorde.add(new Walker());
                     }
                     break;
-                case 2: // Floor 2 - Walkers + Tanks
+                case 2: // TO DO: Floor 2 - Walkers + Tanks
+                    fillZombieHorde(zombieHorde, HORDE_SIZE);
                     break;
-                case 3: // FLoor 3 - Walkers + Tanks + 1 Unknown
+                case 3: // TO DO: FLoor 3 - Walkers + Tanks + 1 Unknown
+                    int randIndex = -1;
+                    do {
+                        // TO DO: randomIndex = random(HORDE_SIZE)
+                        // check if is Walker next to Tank
+                    } while (randIndex == -1);
+                    fillZombieHorde(zombieHorde, HORDE_SIZE);
+                    zombieHorde.set((int)(Math.random() * HORDE_SIZE) , new Unknown());
                     break;
                 default:
             }
-            
-            fight(zombieHorde);
+
+            System.out.println("-- FLOOR " + currFloor + " --");
+            for (Zombie z : zombieHorde) {
+                System.out.println(z.getClass().getName().substring(8));
+            }
+            //fight(zombieHorde);
             System.out.println();
-            
+
+            zombieHorde.clear();
             currFloor++;
         }
     }
 
+    public static void fillZombieHorde(List<Zombie> zombieHorde, int hordeSize) {
+        // Add Walker at first position
+        zombieHorde.add(new Walker());
+        // Fill ArrayList from index 1 to last - 1
+        for (int i = 1; i < hordeSize - 1; i++){
+            // Check if last Zombie is a Walker
+            if (zombieHorde.get(i - 1) instanceof Walker) {
+                // 50/50 between Walker or Tank
+                if ((int)(Math.random() + 0.5) == 0)
+                    zombieHorde.add(new Walker());
+                else zombieHorde.add(new Tank());
+            } else {
+                zombieHorde.add(new Walker());
+            }
+        }
+        // Add Walker at last position
+        zombieHorde.add(new Walker());
+    }
+    
     public static List survivorsGo(List<Zombie> zombiesAlive) {
         int NUM_SURVIVOR_ATTACKS = 3;
         Zombie target; // Current attack target
-        
+
         System.out.println("-- Survivors attacks --");
         for (Survivor s : myTeam) {
             for (int i = 0; i < NUM_SURVIVOR_ATTACKS; i++) {
@@ -73,13 +105,13 @@ public class Zombicide {
                 } else {
                     System.out.println("Fail");
                 }
-                
+
                 // Check if there's any alive zombie left
                 if (zombiesAlive.isEmpty()) {
                     System.out.println();
                     return zombiesAlive;
                 }
-                    
+
             }
             System.out.println();
         }
