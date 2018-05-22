@@ -13,7 +13,7 @@ public class Survivor {
     private Weapon weapon;
 
     public Survivor(String name){
-        this(name, "", Skills_enum.FAST, new Pan());
+        this(name, "AAAAAH!", Skills_enum.FAST, new Pan());
     }
     public Survivor(String name, String warcry, Skills_enum skill, Weapon weapon) {
         this.health = health;

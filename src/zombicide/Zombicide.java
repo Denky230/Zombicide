@@ -41,20 +41,39 @@ public class Zombicide {
                     fillZombieHorde(zombieHorde, HORDE_SIZE);
                     break;
                 case 3: // TO DO: FLoor 3 - Walkers + Tanks + 1 Unknown
+                    fillZombieHorde(zombieHorde, HORDE_SIZE);
+
+                    // Make sure Unknown won't sub in for a side-Tank Walker
                     int randIndex = -1;
                     do {
-                        // TO DO: randomIndex = random(HORDE_SIZE)
-                        // check if is Walker next to Tank
+                        randIndex = (int)(Math.random() * HORDE_SIZE);
+                        // Check if randIndex == Walker next to Tank
+                        if (zombieHorde.get(randIndex) instanceof Walker) {
+                            if (randIndex == 0) {
+                                // Check if right == Tank
+                                if (zombieHorde.get(randIndex + 1) instanceof Tank)
+                                    randIndex = -1;
+                            } else if (randIndex == zombieHorde.size() - 1) {
+                                // Check if left == Tank
+                                if (zombieHorde.get(randIndex - 1) instanceof Tank)
+                                    randIndex = -1;
+                            } else {
+                                // Check if right / left == Tank
+                                if (zombieHorde.get(randIndex + 1) instanceof Tank ||
+                                    zombieHorde.get(randIndex - 1) instanceof Tank)
+                                    randIndex = -1;
+                            }
+                        }
                     } while (randIndex == -1);
-                    fillZombieHorde(zombieHorde, HORDE_SIZE);
-                    zombieHorde.set((int)(Math.random() * HORDE_SIZE) , new Unknown());
+
+                    zombieHorde.set(randIndex , new Unknown());
                     break;
                 default:
             }
 
             System.out.println("-- FLOOR " + currFloor + " --");
             for (Zombie z : zombieHorde) {
-                System.out.println(z.getClass().getName().substring(8));
+                System.out.println(z.getClass().getSimpleName());
             }
             //fight(zombieHorde);
             System.out.println();
