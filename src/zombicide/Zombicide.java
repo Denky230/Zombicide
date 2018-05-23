@@ -46,6 +46,7 @@ public class Zombicide {
                         // TO DO: randomIndex = random(HORDE_SIZE)
                         // check if is Walker next to Tank
                     } while (randIndex == -1);
+                    
                     fillZombieHorde(zombieHorde, HORDE_SIZE);
                     zombieHorde.set((int)(Math.random() * HORDE_SIZE) , new Unknown());
                     break;
