@@ -1,8 +1,6 @@
 
 package zombies;
 
-import skills.Skill;
-
 public abstract class Zombie {
     private int health;
     private int damage;
@@ -23,31 +21,26 @@ public abstract class Zombie {
     public int getSpeed() {
         return speed;
     }
-    
-    public boolean hit() {
-        return (int)(Math.random() + 0.5) == 1;
-    }
 
-    public int calcHit(Skill skill) {
+    public int calcHit(String skill) {
         int random = (int)(Math.random() * 10) + 1;
         int survivorSkillBonus = 0;
         int base = 10;
 
-        String skillName = skill.getClass().getName().substring(7);
-        switch (skillName) {
-            case "Fast":
+        switch (skill) {
+            case "FAST":
                 survivorSkillBonus = 5;
                 break;
-            case "Tracker":
+            case "TRACKER":
                 survivorSkillBonus = 3;
                 break;
-            case "Strong":
+            case "STRONG":
                 survivorSkillBonus = 7;
                 break;
-            case "Slippery":
+            case "SLIPPERY":
                 survivorSkillBonus = 9;
                 break;
-            case "Both_handed":
+            case "BOTH_HANDED":
                 survivorSkillBonus = 8;
                 break;
             default:
@@ -55,4 +48,6 @@ public abstract class Zombie {
 
         return base * survivorSkillBonus + random;
     }
+
+    public abstract int getHiHit();
 }

@@ -1,17 +1,27 @@
 
 package zombies;
 
-import skills.Skill;
-
 public class Walker extends Zombie {
-    static public int hiHit;
-    
+    static private int hiHit;
+
     public Walker() {
         super(1, 2, 2);
     }
+
+    @Override
+    public int calcHit(String skill) {
+        int currHiHit = hiHit;
+        setHiHit(super.calcHit(skill) + 5);
+
+        return hiHit == currHiHit ? 1 : 0;
+    }
     
     @Override
-    public int calcHit(Skill skill) {
-        return super.calcHit(skill) + 5;
+    public int getHiHit() {
+        return this.hiHit;
+    }
+    public void setHiHit(int hit) {
+    	if (hit > this.hiHit)
+            this.hiHit = hit;
     }
 }
