@@ -12,10 +12,10 @@ public class Survivor {
     private Skills_enum skill;
     private Weapon weapon;
 
-    public Survivor(String name){
+    public Survivor(String name) {
         this(name, 3, 5, "AAAAAH!", Skills_enum.FAST, new Pan());
     }
-    public Survivor(String name, int health, int level, String warcry, Skills_enum skill, Weapon weapon) {        
+    public Survivor(String name, int health, int level, String warcry, Skills_enum skill, Weapon weapon) {
         this.name = name;
         this.health = health;
         this.level = level;

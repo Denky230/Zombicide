@@ -83,6 +83,7 @@ public class Zombicide {
 
             // Fight - If Survivors lose exit game, else move on
             if (!fight(zombieHorde)) {
+                // GAME OVER
                 System.out.println("Game Ovah");
                 break;
             }
@@ -91,6 +92,9 @@ public class Zombicide {
             zombieHorde.clear();
             currFloor++;
         }
+
+        // GAME END
+        System.out.println("You won! YUHUUU!");
     }
 
     /**
@@ -119,22 +123,24 @@ public class Zombicide {
     }
 
     public static boolean fight(List<Zombie> zombieHorde) {
-        int length = zombieHorde.size();
-        boolean turn = true;
+        int targetsAlive = zombieHorde.size(); // Members alive after each attack
+        boolean turn = true; // Manage who attacks
 
-        while (length > 0) {
+        while (targetsAlive > 0) {
             if (turn) {
                 // Survivors attack
                 zombieHorde = survivorsGo(zombieHorde);
-                length = zombieHorde.size();
+                targetsAlive = zombieHorde.size();
 
-                System.out.println(length + " zombies left \n");
+                System.out.println(targetsAlive + " zombies left \n");
             } else {
                 // Zombies attack
                 zombiesGo(zombieHorde);
-                length = myTeam.length;
+                targetsAlive = myTeam.length;
 
-                if (length == 0) return false;
+                if (targetsAlive == 0)
+                    return false;
+                else System.out.println(targetsAlive + " survivors left \n"); 
             }
 
             turn = !turn;
@@ -153,7 +159,7 @@ public class Zombicide {
                 // Get a random zombie's index from the "still alive" zombie pool
                 target =  zombiesAlive.get((int)(Math.random() * zombiesAlive.size()));
 
-                // Make s hit target
+                // Make Survivor attack Zombie (target)
                 if (s.hit()) {
                     // Check if damage is enough to kill target
                     if (s.getWeapon().getDamage() >= target.getHealth()) {
@@ -189,18 +195,19 @@ public class Zombicide {
                 // Get a random survivor's index
                 target =  (int)(Math.random() * myTeam.length);
 
-                // Make z hit target
-                if (z.hit()) {
-                    // TO DO: make z do damage
-                    myTeam[target].setHealth(myTeam[target].getHealth() - z.getDamage());
-                    System.out.println(myTeam[target].getName() + " was hit by a " + z.getClass().getSimpleName() + "! HP remaining: " + myTeam[target].getHealth());
-                } else {
-                    System.out.println("Miss");
-                }
+                // Make Zombie attack Survivor (target)
+                myTeam[target].setHealth(myTeam[target].getHealth() - z.getDamage());
+                if (myTeam[target].getHealth() != 0)
+                    System.out.println(myTeam[target].getName() + " was hit by a " + z.getClass().getSimpleName() + "! - HP remaining: " + myTeam[target].getHealth());
+                else System.out.println(myTeam[target].getName() + " was killed by a " + z.getClass().getSimpleName() + "!");
 
-                // TO DO: Lose logic
+                // TO DO: Zombie calcHit()
+                if (z.calcHit(myTeam[target].getSkill().name()) == 1) {
+                    System.out.println();
+                }
             }
             System.out.println();
         }
     }
+    
 }
