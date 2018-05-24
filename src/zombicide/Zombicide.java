@@ -1,4 +1,3 @@
-
 package zombicide;
 
 import java.util.List;
@@ -203,7 +202,7 @@ public class Zombicide {
 
                 // TO DO: Zombie calcHit()
                 if (z.calcHit(myTeam[target].getSkill().name()) == 1) {
-                    System.out.println();
+                    System.out.println(z.getClass().getSimpleName() + "s have a new top hit - " + z.getHiHit() + "!");
                 }
             }
             System.out.println();

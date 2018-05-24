@@ -2,7 +2,7 @@
 package zombies;
 
 public class Unknown extends Zombie {
-    static private int hiHit;
+    static private int hiHit = 0;
 
     public Unknown() {
         super(2, 3, 1);
@@ -13,7 +13,7 @@ public class Unknown extends Zombie {
         int currHiHit = hiHit;
     	setHiHit(super.calcHit(skill) * getDamage());        
 
-        return hiHit == currHiHit ? 1 : 0;
+        return hiHit == currHiHit ? 0 : 1;
     }
 
     @Override
