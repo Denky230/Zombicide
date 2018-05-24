@@ -24,11 +24,17 @@ public class Zombicide {
         // Set survivors
         myTeam = new Survivor[] {
             new Survivor("Rick", 3, 0, "COWABUNGA!", Skills_enum.FAST, new Katana()),
-            new Survivor("Alfredo", 3, 0, "BAZINGA!", Skills_enum.TRACKER, new Gun()),
+            new Survivor("Alfredo", 3, 0, "BAZINGA!", Skills_enum.BOTH_HANDED, new Gun()),
             new Survivor("John", 3, 0, "COME AT ME!", Skills_enum.STRONG, new Shotgun()),
             new Survivor("Manueh"),
             new Survivor("Carla")
         };
+
+        // Apply skill effects
+        applySkills();
+
+        // Introduce team
+        soutTeam();
 
         // GAME LOOP
         while (currFloor <= NUM_FLOORS) {
@@ -99,8 +105,6 @@ public class Zombicide {
     /**
      * Fill zombieHorde with Walkers (W) / Tanks (T) randomized.
      * T must have W on each side.
-     * @param zombieHorde zombie list
-     * @param hordeSize list size
      */
     public static void fillZombieHorde(List<Zombie> zombieHorde, int hordeSize) {
         // Add Walker at first position
@@ -154,8 +158,12 @@ public class Zombicide {
 
         System.out.println("-- Survivors --");
         for (Survivor s : myTeam) {
+            // If Survivor is both-handed && has a Gun equipped attacks x2
+            if (s.getSkill() == Skills_enum.BOTH_HANDED && s.getWeapon() instanceof Gun)
+                NUM_SURVIVOR_ATTACKS *= 2;
+
             for (int i = 0; i < NUM_SURVIVOR_ATTACKS; i++) {
-                // Get a random zombie's index from the "still alive" zombie pool
+                // Get random zombie's index from "still alive" zombie pool
                 target =  zombiesAlive.get((int)(Math.random() * zombiesAlive.size()));
 
                 // Make Survivor attack Zombie (target)
@@ -165,7 +173,7 @@ public class Zombicide {
                         zombiesAlive.remove(target);
                         System.out.println(target.getClass().getName().substring(8) + " slain!");
                     } else {
-                        System.out.println("The damage was too low :(");
+                        System.out.println("Damage was too low :(");
                     }
                 } else {
                     System.out.println("Miss");
@@ -176,7 +184,6 @@ public class Zombicide {
                     System.out.println();
                     return zombiesAlive;
                 }
-
             }
             System.out.println();
         }
@@ -200,7 +207,7 @@ public class Zombicide {
                     System.out.println(myTeam[target].getName() + " was hit by a " + z.getClass().getSimpleName() + "! - HP remaining: " + myTeam[target].getHealth());
                 else System.out.println(myTeam[target].getName() + " was killed by a " + z.getClass().getSimpleName() + "!");
 
-                // TO DO: Zombie calcHit()
+                // Zombie calcHit()
                 if (z.calcHit(myTeam[target].getSkill().name()) == 1) {
                     System.out.println(z.getClass().getSimpleName() + "s have a new top hit - " + z.getHiHit() + "!");
                 }
@@ -208,5 +215,29 @@ public class Zombicide {
             System.out.println();
         }
     }
-    
+
+    // Apply effects depending on skill to each Survivor
+    public static void applySkills() {
+        for (Survivor s : myTeam) {
+            switch (s.getSkill()) {
+                case FAST:
+                    s.getWeapon().setDamage(2);
+                    break;
+                case TRACKER:
+                    s.setWeapon(new Katana());
+                    break;
+                case STRONG:
+                    s.setHealth(s.getHealth() + 1);
+                    break;
+                default:
+            }
+        }
+    }
+
+    public static void soutTeam() {
+        for (Survivor s : myTeam) {
+            System.out.println(s.toString());
+        }
+        System.out.println();
+    }
 }

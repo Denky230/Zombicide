@@ -15,7 +15,7 @@ public class Walker extends Zombie {
 
         return hiHit == currHiHit ? 0 : 1;
     }
-    
+
     @Override
     public int getHiHit() {
         return this.hiHit;

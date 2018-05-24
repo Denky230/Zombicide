@@ -78,4 +78,9 @@ public class Survivor {
     public boolean hit() {
         return (int)(Math.random() + 0.5) == 1;
     }
+
+    @Override
+    public String toString() {
+        return super.toString(); //To change body of generated methods, choose Tools | Templates.
+    }
 }
