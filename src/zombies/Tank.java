@@ -2,7 +2,7 @@
 package zombies;
 
 public class Tank extends Zombie {
-    static private int hiHit;
+    static private int hiHit = 0;
 
     public Tank() {
         super(2, 1, 2);
@@ -13,7 +13,7 @@ public class Tank extends Zombie {
         int currHiHit = this.hiHit;
         setHiHit(super.calcHit(skill) + getSpeed() * 2);
 
-        return hiHit == currHiHit ? 1 : 0;
+        return hiHit == currHiHit ? 0 : 1;
     }
 
     @Override

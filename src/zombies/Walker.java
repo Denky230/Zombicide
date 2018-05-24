@@ -2,7 +2,7 @@
 package zombies;
 
 public class Walker extends Zombie {
-    static private int hiHit;
+    static private int hiHit = 0;
 
     public Walker() {
         super(1, 2, 2);
@@ -13,7 +13,7 @@ public class Walker extends Zombie {
         int currHiHit = hiHit;
         setHiHit(super.calcHit(skill) + 5);
 
-        return hiHit == currHiHit ? 1 : 0;
+        return hiHit == currHiHit ? 0 : 1;
     }
     
     @Override
