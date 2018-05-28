@@ -81,6 +81,13 @@ public class Survivor {
 
     @Override
     public String toString() {
-        return super.toString(); //To change body of generated methods, choose Tools | Templates.
+        String skill = getSkill().name().toLowerCase();
+        skill = skill.toUpperCase().charAt(0) + skill.substring(1, skill.length());
+
+        return getName() + "\n\t"
+                + "Level: " + getLevel() + "\n\t"
+                + "Health: " + getHealth() + "\n\t"
+                + "Skill: " + skill + "\n\t"
+                + "Weapon: " + getWeapon().getClass().getSimpleName();
     }
 }

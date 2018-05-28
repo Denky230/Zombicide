@@ -235,9 +235,9 @@ public class Zombicide {
     }
 
     public static void soutTeam() {
+        System.out.println("-- Survs Team --\n");
         for (Survivor s : myTeam) {
-            System.out.println(s.toString());
+            System.out.println(s.toString() + "\n");
         }
-        System.out.println();
     }
 }
