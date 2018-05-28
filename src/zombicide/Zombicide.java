@@ -203,6 +203,7 @@ public class Zombicide {
 
                 // Make Zombie attack Survivor (target)
                 myTeam[target].setHealth(myTeam[target].getHealth() - z.getDamage());
+                // Report Surv remaining hp (if any)
                 if (myTeam[target].getHealth() != 0)
                     System.out.println(myTeam[target].getName() + " was hit by a " + z.getClass().getSimpleName() + "! - HP remaining: " + myTeam[target].getHealth());
                 else System.out.println(myTeam[target].getName() + " was killed by a " + z.getClass().getSimpleName() + "!");
