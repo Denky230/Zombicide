@@ -1,6 +1,6 @@
 
 package skills;
 
-public enum Skills_enum {
+public enum Skills {
     FAST, TRACKER, STRONG, SLIPPERY, BOTH_HANDED
 }

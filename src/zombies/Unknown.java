@@ -2,7 +2,7 @@
 package zombies;
 
 public class Unknown extends Zombie {
-    static private int hiHit = 0;
+    private static int hiHit = 0;
 
     public Unknown() {
         super(2, 3, 1);

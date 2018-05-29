@@ -10,30 +10,65 @@ import zombies.*;
 
 public class Zombicide {
 
-    static Survivor[] myTeam;
+    public static Survivor[] myTeam;
+    static List<Zombie> zombieHorde = new ArrayList<>();
 
     public static void main(String[] args) {
         // Floor vars
-        int NUM_FLOORS = 3;
+        final int NUM_FLOORS = 3;
         int currFloor = 1;
-
         // Zombie vars
-        int HORDE_SIZE = 8;
-        List<Zombie> zombieHorde = new ArrayList<>();
+        final int HORDE_SIZE = 8;
 
         // Set survivors
         myTeam = new Survivor[] {
-            new Survivor("Rick", 3, 0, "COWABUNGA!", Skills_enum.FAST, new Katana()),
-            new Survivor("Alfredo", 3, 0, "BAZINGA!", Skills_enum.BOTH_HANDED, new Gun()),
-            new Survivor("John", 3, 0, "COME AT ME!", Skills_enum.STRONG, new Shotgun()),
+            new Survivor("Rick", 3, 0, "COWABUNGA!"),
+            new Survivor("Alfredo", 3, 0, "BAZINGA!"),
+            new Survivor("John", 3, 0, "COME AT ME!"),
             new Survivor("Manueh"),
             new Survivor("Carla")
         };
+        
+        String team = "";
+        for (Survivor s : myTeam) {
+            team += s.getName() + ", ";
+        }
+        team = team.substring(0, team.length() - 2);
+        
+        // LORE
+        System.out.println(
+                "We find ourselves in a building plagued with "
+                + "zombies and,\nsadly, our only option is to fight our way "
+                + "up to the roof...\n\n"
+                + "This is our team: " + team + ".\nNow let's roll whatever "
+                + "few equipment we have.\n"
+        );
 
-        // Apply skill effects
-        applySkills();
+        System.out.println("-- Equipment roll --\n");
+        // Assign skill randomly to each Survivor
+        rollSkills();
+        
+        // Apply each Survivor's skill effects
+        for (int i = 0; i < myTeam.length; i++) {
+            myTeam[i].applySkills();
+            
+            // Convert Survivor to subclass when needed
+            switch (myTeam[i].getSkill()) {
+                case SLIPPERY:
+                    myTeam[i] = new Survivor_Slippery(myTeam[i]);
+                    break;
+                case FAST:
+                    myTeam[i] = new Survivor_Fast(myTeam[i]);
+                    break;
+                default:
+            }            
+        }
+        
+        // Assign weapons randomly to Survivors who still don't have one
+        rollWeapons();
+        System.out.println();
 
-        // Introduce team
+        // Print team info
         soutTeam();
 
         // GAME LOOP
@@ -46,10 +81,10 @@ public class Zombicide {
                     }
                     break;
                 case 2: // TO DO: Floor 2 - Walkers + Tanks
-                    fillZombieHorde(zombieHorde, HORDE_SIZE);
+                    fillZombieHorde(HORDE_SIZE);
                     break;
                 case 3: // TO DO: FLoor 3 - Walkers + Tanks + 1 Unknown
-                    fillZombieHorde(zombieHorde, HORDE_SIZE);
+                    fillZombieHorde(HORDE_SIZE);
 
                     // Make sure Unknown won't sub in for a side-Tank Walker
                     int randIndex = -1;
@@ -87,13 +122,16 @@ public class Zombicide {
             System.out.println("\n");
 
             // Fight - If Survivors lose exit game, else move on
-            if (!fight(zombieHorde)) {
+            if (!fight()) {
                 // GAME OVER
                 System.out.println("Game Ovah");
                 break;
             }
 
-            // Reset horde and go next floor
+            // Reset survivors & horde and go next floor
+            for (Survivor s : myTeam) {
+                s.reset();
+            }
             zombieHorde.clear();
             currFloor++;
         }
@@ -103,46 +141,46 @@ public class Zombicide {
     }
 
     /**
-     * Fill zombieHorde with Walkers (W) / Tanks (T) randomized.
+     * Fill zombieHorde with Walkers (W) / Tanks (T) randomly.
      * T must have W on each side.
      */
-    public static void fillZombieHorde(List<Zombie> zombieHorde, int hordeSize) {
+    public static void fillZombieHorde(int hordeSize) {
         // Add Walker at first position
         zombieHorde.add(new Walker());
+        
         // Fill ArrayList from index 1 to last - 1
-        for (int i = 1; i < hordeSize - 1; i++){
-            // Check if last Zombie is a Walker
+        for (int i = 1; i < hordeSize - 1; i++) {            
+            // Check if Zombie to the left is a Walker
             if (zombieHorde.get(i - 1) instanceof Walker) {
+                
                 // 50/50 between Walker or Tank
                 if ((int)(Math.random() + 0.5) == 0)
                     zombieHorde.add(new Walker());
                 else zombieHorde.add(new Tank());
-            } else {
-                zombieHorde.add(new Walker());
-            }
+                
+            } else zombieHorde.add(new Walker());
         }
         // Add Walker at last position
         zombieHorde.add(new Walker());
     }
 
-    public static boolean fight(List<Zombie> zombieHorde) {
+    public static boolean fight() {
         int targetsAlive = zombieHorde.size(); // Members alive after each attack
-        boolean turn = true; // Manage who attacks
+        boolean turn = true; // Manages who attacks
 
         while (targetsAlive > 0) {
             if (turn) {
                 // Survivors attack
-                zombieHorde = survivorsGo(zombieHorde);
+                survivorsGo();
                 targetsAlive = zombieHorde.size();
 
                 System.out.println(targetsAlive + " zombies left \n");
             } else {
                 // Zombies attack
-                zombiesGo(zombieHorde);
+                zombiesGo();
                 targetsAlive = myTeam.length;
 
-                if (targetsAlive == 0)
-                    return false;
+                if (targetsAlive == 0) return false;
                 else System.out.println(targetsAlive + " survivors left \n"); 
             }
 
@@ -152,25 +190,25 @@ public class Zombicide {
         return true;
     }
 
-    public static List survivorsGo(List<Zombie> zombiesAlive) {
+    public static void survivorsGo() {
         int NUM_SURVIVOR_ATTACKS = 3;
         Zombie target; // Current attack target
 
         System.out.println("-- Survivors --");
         for (Survivor s : myTeam) {
             // If Survivor is both-handed && has a Gun equipped attacks x2
-            if (s.getSkill() == Skills_enum.BOTH_HANDED && s.getWeapon() instanceof Gun)
+            if (s.getSkill() == Skills.BOTH_HANDED && s.getWeapon() instanceof Gun)
                 NUM_SURVIVOR_ATTACKS *= 2;
 
             for (int i = 0; i < NUM_SURVIVOR_ATTACKS; i++) {
                 // Get random zombie's index from "still alive" zombie pool
-                target =  zombiesAlive.get((int)(Math.random() * zombiesAlive.size()));
+                target =  zombieHorde.get((int)(Math.random() * zombieHorde.size()));
 
                 // Make Survivor attack Zombie (target)
                 if (s.hit()) {
                     // Check if damage is enough to kill target
                     if (s.getWeapon().getDamage() >= target.getHealth()) {
-                        zombiesAlive.remove(target);
+                        zombieHorde.remove(target);
                         System.out.println(target.getClass().getName().substring(8) + " slain!");
                     } else {
                         System.out.println("Damage was too low :(");
@@ -180,65 +218,57 @@ public class Zombicide {
                 }
 
                 // Check if there's any alive zombie left
-                if (zombiesAlive.isEmpty()) {
+                if (zombieHorde.isEmpty()) {
                     System.out.println();
-                    return zombiesAlive;
+                    return;
                 }
             }
             System.out.println();
         }
-
-        return zombiesAlive;
     }
 
-    public static void zombiesGo(List<Zombie> zombieAlive) {
+    public static void zombiesGo() {
         int NUM_ZOMBIE_ATTACKS = 1;
         int target; // Current attack target
 
         System.out.println("-- Zombies --");
-        for (Zombie z : zombieAlive) {
+        for (Zombie z : zombieHorde) {
             for (int i = 0; i < NUM_ZOMBIE_ATTACKS; i++) {
                 // Get a random survivor's index
                 target =  (int)(Math.random() * myTeam.length);
 
                 // Make Zombie attack Survivor (target)
-                myTeam[target].setHealth(myTeam[target].getHealth() - z.getDamage());
-                // Report Surv remaining hp (if any)
-                if (myTeam[target].getHealth() != 0)
-                    System.out.println(myTeam[target].getName() + " was hit by a " + z.getClass().getSimpleName() + "! - HP remaining: " + myTeam[target].getHealth());
-                else System.out.println(myTeam[target].getName() + " was killed by a " + z.getClass().getSimpleName() + "!");
+                myTeam[target].takeDamage(z.getDamage(), z.getClass().getSimpleName());
 
                 // Zombie calcHit()
-                if (z.calcHit(myTeam[target].getSkill().name()) == 1) {
+                if (z.calcHit(myTeam[target].getSkill().name()) == 1)
                     System.out.println(z.getClass().getSimpleName() + "s have a new top hit - " + z.getHiHit() + "!");
-                }
             }
             System.out.println();
         }
     }
 
-    // Apply effects depending on skill to each Survivor
-    public static void applySkills() {
+    public static void rollSkills() {
         for (Survivor s : myTeam) {
-            switch (s.getSkill()) {
-                case FAST:
-                    s.getWeapon().setDamage(2);
-                    break;
-                case TRACKER:
-                    s.setWeapon(new Katana());
-                    break;
-                case STRONG:
-                    s.setHealth(s.getHealth() + 1);
-                    break;
-                default:
+            s.setSkill(Skills.values()[(int)(Math.random() * Skills.values().length)]);
+        }
+    }
+    
+    public static void rollWeapons() {
+        WeaponFactory factory = new WeaponFactory();
+        
+        for (Survivor s : myTeam) {
+            // Make sure a weapon out of stock is not being assigned
+            while (s.getWeapon() == null) {                
+                s.setWeapon(factory.buildWeapon(WeaponClasses.values()[(int)(Math.random() * WeaponClasses.values().length)]));                
             }
         }
     }
-
+    
     public static void soutTeam() {
-        System.out.println("-- Survs Team --\n");
+        System.out.println("-- Team Info --\n");
         for (Survivor s : myTeam) {
-            System.out.println(s.toString() + "\n");
+            System.out.println(s.toString()+ "\n");
         }
-    }
+    }    
 }

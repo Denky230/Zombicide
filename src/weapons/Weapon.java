@@ -1,7 +1,7 @@
 
 package weapons;
 
-public abstract class Weapon {
+public abstract class Weapon {    
     private int damage;
     private int distance;
     
@@ -20,4 +20,5 @@ public abstract class Weapon {
     public int getDistance() {
         return distance;
     }
+    
 }

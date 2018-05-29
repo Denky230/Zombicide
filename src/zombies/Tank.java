@@ -2,7 +2,7 @@
 package zombies;
 
 public class Tank extends Zombie {
-    static private int hiHit = 0;
+    private static int hiHit = 0;
 
     public Tank() {
         super(2, 1, 2);
