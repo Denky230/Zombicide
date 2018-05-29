@@ -1,6 +1,8 @@
 
 package zombies;
 
+import survivor.Survivor;
+
 public class Unknown extends Zombie {
     private static int hiHit = 0;
 
@@ -9,28 +11,32 @@ public class Unknown extends Zombie {
     }
 
     @Override
+    public void hit(Survivor survivor) {
+        super.hit(survivor);
+
+        while (swipe()) {
+            super.hit(survivor);
+            System.out.println("This Uknown is on a rampage!");
+        }
+    }
+    public boolean swipe() {
+        return ((int)(Math.random() * 10) + 1) > 7;
+    }
+
+    @Override
     public int calcHit(String skill) {
         int currHiHit = hiHit;
-    	setHiHit(super.calcHit(skill) * getDamage());        
+        setHiHit(super.calcHit(skill) * getDamage());
 
         return hiHit == currHiHit ? 0 : 1;
     }
 
     @Override
     public int getHiHit() {
-        return this.hiHit;
+        return Unknown.hiHit;
     }
     public void setHiHit(int hit) {
-        if (hit > this.hiHit)
-            this.hiHit = hit;
-    }
-
-    public boolean swipe() {
-        /*
-        TO DO: random btwn 1 - 10; if result > 7, hit again
-        maybe include this in super.hit() (override hit)
-        */
-
-        return false;
+        if (hit > Unknown.hiHit)
+            Unknown.hiHit = hit;
     }
 }

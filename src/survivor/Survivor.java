@@ -14,7 +14,7 @@ public class Survivor {
     private Weapon weapon;
 
     public Survivor(String name) {
-        this(name, 3, 5, "AAAAAH!", null, null);
+        this(name, 3, 0, "AAAAAH!", null, null);
     }
     public Survivor(String name, int health, int level, String warcry) {
         this(name, health, level, warcry, null, null);
@@ -27,26 +27,26 @@ public class Survivor {
         this.skill = skill;
         this.weapon = weapon;
     }
-    
+
     @Override
     public String toString() {
         String skillName = getSkill().name().toLowerCase();
         skillName = skillName.toUpperCase().charAt(0) + skillName.substring(1, skillName.length());
 
         return getName() + "\n\t"
-                + "Level: " + getLevel() + "\n\t"
                 + "Health: " + getHealth() + "\n\t"
                 + "Skill: " + skillName + "\n\t"
-                + "Weapon: " + getWeapon().getClass().getSimpleName();
+                + "Weapon: " + getWeapon().getClass().getSimpleName() + "\n\t\t"
+                + "Damage: " + getWeapon().getDamage();
     }
-    
+
     public int getHealth() {
         return health;
     }
     public void setHealth(int health) {
         this.health = health >= 0 ? health : 0;
     }
-    
+
     public int getLevel() {
         return level;
     }
@@ -94,14 +94,14 @@ public class Survivor {
     public boolean hit() {
         return (int)(Math.random() + 0.5) == 1;
     }
-    
+
     public void takeDamage(int damage, String zombieClass) {
         setHealth(getHealth() - damage);
-        
+
         // Print Surv remaining HP (if any)
         System.out.println(
-                getHealth() != 0 ? 
-                    getName() + " was hit by a " + zombieClass + "! - HP remaining: " + getHealth() : 
+                getHealth() != 0 ?
+                    getName() + " was hit by a " + zombieClass + "! - HP remaining: " + getHealth() :
                     getName() + " was killed by a " + zombieClass + "! :("
         );
     }
@@ -114,11 +114,11 @@ public class Survivor {
                 break;
             case STRONG:
                 setHealth(getHealth() + 1);
-                break;    
+                break;
             default:
         }
     }
-    
+
     // Called when entering new floor
     public void reset() {}
 }

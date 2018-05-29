@@ -1,10 +1,12 @@
 
 package zombies;
 
+import survivor.Survivor;
+
 public abstract class Zombie {
-    private int health;
-    private int damage;
-    private int speed;
+    private final int health;
+    private final int damage;
+    private final int speed;
 
     public Zombie(int health, int damage, int speed) {
         this.health = health;
@@ -20,6 +22,10 @@ public abstract class Zombie {
     }
     public int getSpeed() {
         return speed;
+    }
+
+    public void hit(Survivor survivor) {
+        survivor.takeDamage(getDamage(), getClass().getSimpleName());
     }
 
     public int calcHit(String skill) {

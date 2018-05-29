@@ -18,10 +18,10 @@ public class Tank extends Zombie {
 
     @Override
     public int getHiHit() {
-        return this.hiHit;
+        return Tank.hiHit;
     }
     public void setHiHit(int hit) {
-    	if (hit > this.hiHit)
-            this.hiHit = hit;
+    	if (hit > Tank.hiHit)
+            Tank.hiHit = hit;
     }
 }

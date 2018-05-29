@@ -6,8 +6,8 @@ public class Survivor_Slippery extends Survivor {
 
     public Survivor_Slippery(Survivor survivor) {
         super(survivor.getName(), survivor.getHealth(), survivor.getLevel(), survivor.getWarcry(), survivor.getSkill(), survivor.getWeapon());
-    }   
-    
+    }
+
     @Override
     public void takeDamage(int damage, String zombieClass) {
         if (!dodgedThisFloor) {
@@ -17,7 +17,7 @@ public class Survivor_Slippery extends Survivor {
             super.takeDamage(damage, zombieClass);
         }
     }
-    
+
     @Override
     public void reset() {
         dodgedThisFloor = false;

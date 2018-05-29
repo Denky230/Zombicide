@@ -18,10 +18,10 @@ public class Walker extends Zombie {
 
     @Override
     public int getHiHit() {
-        return this.hiHit;
+        return Walker.hiHit;
     }
     public void setHiHit(int hit) {
-    	if (hit > this.hiHit)
-            this.hiHit = hit;
+    	if (hit > Walker.hiHit)
+            Walker.hiHit = hit;
     }
 }
