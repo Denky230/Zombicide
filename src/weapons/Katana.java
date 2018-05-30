@@ -5,7 +5,7 @@ public class Katana extends Weapon {
     public static int stock = 2;
 
     private Katana() {
-        super(3, 0);
+        super(2, 0);
     }
     
     public static Katana instantiate() {

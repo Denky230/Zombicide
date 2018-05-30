@@ -4,9 +4,9 @@ package survivor;
 import weapons.Weapon;
 
 public class Survivor_Fast extends Survivor {
-
+    
     public Survivor_Fast(Survivor survivor) {
-        super(survivor.getName(), survivor.getHealth(), survivor.getLevel(), survivor.getWarcry(), survivor.getSkill(), survivor.getWeapon());
+        super(survivor.getName(), survivor.getWarcry());
     }
     
     @Override

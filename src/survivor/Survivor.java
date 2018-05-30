@@ -1,41 +1,32 @@
 
 package survivor;
 
-import skills.Skills;
 import weapons.Weapon;
-import weapons.Katana;
 
 public class Survivor {
-    private int health;
-    private int level;
+    //private int level;
+    private int health;    
     private String name;
     private String warcry;
-    private Skills skill;
     private Weapon weapon;
 
     public Survivor(String name) {
-        this(name, 3, 0, "AAAAAH!", null, null);
-    }
-    public Survivor(String name, int health, int level, String warcry) {
-        this(name, health, level, warcry, null, null);
-    }
-    public Survivor(String name, int health, int level, String warcry, Skills skill, Weapon weapon) {
+        this(name, "AAAAAH!");
+    }    
+    public Survivor(String name, String warcry) {
         this.name = name;
-        this.health = health;
-        this.level = level;
         this.warcry = warcry;
-        this.skill = skill;
-        this.weapon = weapon;
+        
+        this.health = 3;
     }
 
     @Override
     public String toString() {
-        String skillName = getSkill().name().toLowerCase();
-        skillName = skillName.toUpperCase().charAt(0) + skillName.substring(1, skillName.length());
-
+        String skill = getClass().getSimpleName().substring(9);  // Get just the subclass skill
+        
         return getName() + "\n\t"
                 + "Health: " + getHealth() + "\n\t"
-                + "Skill: " + skillName + "\n\t"
+                + "Skill: " + skill + "\n\t"
                 + "Weapon: " + getWeapon().getClass().getSimpleName() + "\n\t\t"
                 + "Damage: " + getWeapon().getDamage();
     }
@@ -47,12 +38,14 @@ public class Survivor {
         this.health = health >= 0 ? health : 0;
     }
 
+    /*
     public int getLevel() {
         return level;
     }
     public void setLevel(int level) {
         this.level = level >= 0 ? level : 0;
     }
+    */
 
     public String getName() {
         return name;
@@ -66,13 +59,6 @@ public class Survivor {
     }
     public void setWarcry(String warcry) {
         this.warcry = warcry;
-    }
-
-    public Skills getSkill() {
-        return skill;
-    }
-    public void setSkill(Skills skill) {
-        this.skill = skill;
     }
 
     public Weapon getWeapon() {
@@ -104,19 +90,6 @@ public class Survivor {
                     getName() + " was hit by a " + zombieClass + "! - HP remaining: " + getHealth() :
                     getName() + " was killed by a " + zombieClass + "! :("
         );
-    }
-
-    // Apply effects depending on skill
-    public void applySkills() {
-        switch (getSkill()) {
-            case TRACKER:
-                setWeapon(Katana.instantiate());
-                break;
-            case STRONG:
-                setHealth(getHealth() + 1);
-                break;
-            default:
-        }
     }
 
     // Called when entering new floor

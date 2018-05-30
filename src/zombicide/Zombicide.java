@@ -1,11 +1,11 @@
 
 package zombicide;
 
+import survivor.Skills;
 import java.util.List;
 import java.util.ArrayList;
 
 import survivor.*;
-import skills.*;
 import weapons.*;
 import zombies.*;
 
@@ -23,9 +23,9 @@ public class Zombicide {
 
         // Set survivors
         myTeam = new Survivor[] {
-            new Survivor("Rick", 3, 0, "COWABUNGA!"),
-            new Survivor("Alfredo", 3, 0, "BAZINGA!"),
-            new Survivor("John", 3, 0, "COME AT ME!"),
+            new Survivor("Rick", "COWABUNGA!"),
+            new Survivor("Alfredo", "BAZINGA!"),
+            new Survivor("John", "COME AT ME!"),
             new Survivor("Manueh"),
             new Survivor("Carla")
         };
@@ -37,8 +37,8 @@ public class Zombicide {
         team = team.substring(0, team.length() - 2);
 
         // LORE
-        System.out.println(
-                "We find ourselves in a building plagued with "
+        System.out.println("\n"
+                + "We find ourselves in a building plagued with "
                 + "zombies and,\nsadly, our only option is to fight our way "
                 + "up to the roof...\n\n"
                 + "This is our team: " + team + ".\nNow let's roll whatever "
@@ -46,24 +46,9 @@ public class Zombicide {
         );
 
         System.out.println("-- Equipment roll --\n");
-        // Assign skill randomly to each Survivor
+
+        // Assign skills randomly to Survivors
         rollSkills();
-
-        // Apply each Survivor's skill effects
-        for (int i = 0; i < myTeam.length; i++) {
-            myTeam[i].applySkills();
-
-            // Convert Survivor to subclass when needed
-            switch (myTeam[i].getSkill()) {
-                case SLIPPERY:
-                    myTeam[i] = new Survivor_Slippery(myTeam[i]);
-                    break;
-                case FAST:
-                    myTeam[i] = new Survivor_Fast(myTeam[i]);
-                    break;
-                default:
-            }
-        }
 
         // Assign weapons randomly to Survivors who still don't have one
         rollWeapons();
@@ -203,7 +188,7 @@ public class Zombicide {
         System.out.println("-- Survivors --");
         for (Survivor s : myTeam) {
             // If Survivor is both-handed && has a Gun equipped attacks x2
-            if (s.getSkill() == Skills.BOTH_HANDED && s.getWeapon() instanceof Gun)
+            if (s instanceof Survivor_Both_handed && s.getWeapon() instanceof Gun)
                 NUM_SURVIVOR_ATTACKS *= 2;
 
             for (int i = 0; i < NUM_SURVIVOR_ATTACKS; i++) {
@@ -245,7 +230,9 @@ public class Zombicide {
             z.hit(myTeam[target]);
 
             // Zombie calcHit()
-            if (z.calcHit(myTeam[target].getSkill().name()) == 1)
+            String skill = myTeam[target].getClass().getSimpleName().substring(9);  // Get just the subclass skill
+            // Check if calcHit beat highscore
+            if (z.calcHit(skill) == 1)
                 System.out.println(z.getClass().getSimpleName() + "s have a new top hit - " + z.getHiHit() + "!");
 
             System.out.println();
@@ -253,18 +240,39 @@ public class Zombicide {
     }
 
     public static void rollSkills() {
-        for (Survivor s : myTeam) {
-            s.setSkill(Skills.values()[(int)(Math.random() * Skills.values().length)]);
+        for (int i = 0; i < myTeam.length; i++) {
+            // Get a random skill from Skills enum
+            Skills randomSkill = Skills.values()[(int)(Math.random() * Skills.values().length)];
+            
+            // Convert Survivors to subclass based on randomSkill
+            switch (randomSkill) {
+                case FAST:
+                    myTeam[i] = new Survivor_Fast(myTeam[i]);
+                    break;
+                case TRACKER:
+                    myTeam[i] = new Survivor_Tracker(myTeam[i]);
+                    break;
+                case STRONG:
+                    myTeam[i] = new Survivor_Strong(myTeam[i]);
+                    break;
+                case SLIPPERY:
+                    myTeam[i] = new Survivor_Slippery(myTeam[i]);
+                    break;
+                case BOTH_HANDED:
+                    myTeam[i] = new Survivor_Both_handed(myTeam[i]);
+                    break;
+                default:
+            }
         }
     }
-
+    
     public static void rollWeapons() {
         WeaponFactory factory = new WeaponFactory();
 
         for (Survivor s : myTeam) {
             // Make sure a weapon out of stock is not being assigned
             while (s.getWeapon() == null) {                
-                s.setWeapon(factory.buildWeapon(WeaponClasses.values()[(int)(Math.random() * WeaponClasses.values().length)]));                
+                s.setWeapon(factory.buildWeapon(WeaponClasses.values()[(int)(Math.random() * WeaponClasses.values().length)]));
             }
         }
     }
