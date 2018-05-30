@@ -1,7 +1,8 @@
 
 package weapons;
 
-public abstract class Weapon {    
+public abstract class Weapon {
+
     private int damage;
     private int distance;
 

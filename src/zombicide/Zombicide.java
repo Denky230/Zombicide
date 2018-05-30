@@ -52,78 +52,79 @@ public class Zombicide {
 
         // Assign weapons randomly to Survivors who still don't have one
         rollWeapons();
-        System.out.println();
 
         // Print team info
         soutTeam();
 
         // GAME LOOP
         while (currFloor <= NUM_FLOORS) {
-            // Set floor specifics
-            switch (currFloor) {
-                case 1: // Floor 1 - Just Walkers
-                    for (int i = 0; i < HORDE_SIZE; i++){
-                       zombieHorde.add(new Walker());
-                    }
-                    break;
-                case 2: // TO DO: Floor 2 - Walkers + Tanks
-                    fillZombieHorde(HORDE_SIZE);
-                    break;
-                case 3: // TO DO: FLoor 3 - Walkers + Tanks + 1 Unknown
-                    fillZombieHorde(HORDE_SIZE);
+            // Do floor specifics
+            setFloorSpecifics(currFloor, HORDE_SIZE);
 
-                    // Make sure Unknown won't sub in for a side-Tank Walker
-                    int randIndex = -1;
-                    do {
-                        randIndex = (int)(Math.random() * HORDE_SIZE);
-                        // Check if randIndex == Walker next to Tank
-                        if (zombieHorde.get(randIndex) instanceof Walker) {
-                            if (randIndex == 0) {
-                                // Check if right == Tank
-                                if (zombieHorde.get(randIndex + 1) instanceof Tank)
-                                    randIndex = -1;
-                            } else if (randIndex == zombieHorde.size() - 1) {
-                                // Check if left == Tank
-                                if (zombieHorde.get(randIndex - 1) instanceof Tank)
-                                    randIndex = -1;
-                            } else {
-                                // Check if right / left == Tank
-                                if (zombieHorde.get(randIndex + 1) instanceof Tank ||
-                                    zombieHorde.get(randIndex - 1) instanceof Tank)
-                                    randIndex = -1;
-                            }
-                        }
-                    } while (randIndex == -1);
-
-                    // Sub random zombie for an Unknown
-                    zombieHorde.set(randIndex , new Unknown());
-                    break;
-                default:
-            }
-
+            // Print out Floor + zombieHorde
             System.out.println("/// FLOOR " + currFloor + " /// \n");
             for (Zombie z : zombieHorde) {
                 System.out.print(z.getClass().getSimpleName().charAt(0) + " ");
             }
             System.out.println("\n");
 
-            // Fight - If Survivors lose exit game, else move on
-            if (!fight()) {
-                // GAME OVER
-                System.out.println("Game Ovah");
-                break;
-            }
-
-            // Reset survivors & horde and go next floor
-            for (Survivor s : myTeam) {
-                s.reset();
-            }
-            zombieHorde.clear();
-            currFloor++;
+            // Fight
+            if (fight()) {
+                // Reset survivors & horde and go next floor
+                for (Survivor s : myTeam) {
+                    s.reset();
+                }
+                zombieHorde.clear();
+                currFloor++;
+            } else break;
         }
 
         // GAME END
-        System.out.println("You won! YUHUUU!");
+        System.out.println(currFloor > NUM_FLOORS ? "You won! YUHUUU!" :
+                                                    "Gaaaame Ovah");
+    }
+
+    public static void setFloorSpecifics(int floor, int hordeSize) {
+        switch (floor) {
+            case 1: // Floor 1 - Just Walkers
+                for (int i = 0; i < hordeSize; i++){
+                   zombieHorde.add(new Walker());
+                }
+                break;
+            case 2: // Floor 2 - Walkers + Tanks
+                fillZombieHorde(hordeSize);
+                break;
+            case 3: // FLoor 3 - Walkers + Tanks + 1 Unknown
+                fillZombieHorde(hordeSize);
+
+                // Make sure Unknown won't sub in for a side-Tank Walker
+                int randIndex = -1;
+                do {
+                    randIndex = (int)(Math.random() * hordeSize);
+                    // Check if randIndex == Walker next to Tank
+                    if (zombieHorde.get(randIndex) instanceof Walker) {
+                        if (randIndex == 0) {
+                            // Check if right == Tank
+                            if (zombieHorde.get(randIndex + 1) instanceof Tank)
+                                randIndex = -1;
+                        } else if (randIndex == zombieHorde.size() - 1) {
+                            // Check if left == Tank
+                            if (zombieHorde.get(randIndex - 1) instanceof Tank)
+                                randIndex = -1;
+                        } else {
+                            // Check if right / left == Tank
+                            if (zombieHorde.get(randIndex + 1) instanceof Tank ||
+                                zombieHorde.get(randIndex - 1) instanceof Tank)
+                                randIndex = -1;
+                        }
+                    }
+                } while (randIndex == -1);
+
+                // Sub random zombie for an Unknown
+                zombieHorde.set(randIndex , new Unknown());
+                break;
+            default:
+        }
     }
 
     /**
@@ -135,7 +136,7 @@ public class Zombicide {
         zombieHorde.add(new Walker());
 
         // Fill ArrayList from index 1 to last - 1
-        for (int i = 1; i < hordeSize - 1; i++) {            
+        for (int i = 1; i < hordeSize - 1; i++) {
             // Check if Zombie to the left is a Walker
             if (zombieHorde.get(i - 1) instanceof Walker) {
 
@@ -150,6 +151,9 @@ public class Zombicide {
         zombieHorde.add(new Walker());
     }
 
+    /**
+     * @return True => Survs win, False => Zombies win
+     */
     public static boolean fight() {
         int targetsAlive = zombieHorde.size(); // Members alive after each attack
         boolean turn = true; // Manages who attacks
@@ -171,14 +175,13 @@ public class Zombicide {
                     if (s.getHealth() > 0) targetsAlive++;
                 }
 
-                if (targetsAlive == 0) return false;
-                else System.out.println(targetsAlive + " survivors left \n"); 
+                System.out.println(targetsAlive + " survivors left \n");
             }
 
             turn = !turn;
         }
 
-        return true;
+        return !turn;
     }
 
     public static void survivorsGo() {
@@ -243,8 +246,8 @@ public class Zombicide {
         for (int i = 0; i < myTeam.length; i++) {
             // Get a random skill from Skills enum
             Skills randomSkill = Skills.values()[(int)(Math.random() * Skills.values().length)];
-            
-            // Convert Survivors to subclass based on randomSkill
+
+            // Convert Survivors to subclass based on skill
             switch (randomSkill) {
                 case FAST:
                     myTeam[i] = new Survivor_Fast(myTeam[i]);
@@ -265,22 +268,23 @@ public class Zombicide {
             }
         }
     }
-    
+
     public static void rollWeapons() {
         WeaponFactory factory = new WeaponFactory();
 
         for (Survivor s : myTeam) {
-            // Make sure a weapon out of stock is not being assigned
-            while (s.getWeapon() == null) {                
+            // Make sure everyone has a weapon
+            while (s.getWeapon() == null) {
                 s.setWeapon(factory.buildWeapon(WeaponClasses.values()[(int)(Math.random() * WeaponClasses.values().length)]));
             }
         }
     }
 
     public static void soutTeam() {
-        System.out.println("-- Team Info --\n");
+        System.out.println("\n-- Team Info --\n");
         for (Survivor s : myTeam) {
             System.out.println(s.toString()+ "\n");
         }
     }
+
 }

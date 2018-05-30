@@ -9,7 +9,7 @@ public class Pan extends Weapon {
     private Pan() {
         super(1, 0);
     }
-    
+
     public static Pan instantiate() {
         if (stock > 0) {
             stock--;
