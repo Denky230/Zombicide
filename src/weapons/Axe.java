@@ -2,7 +2,7 @@
 package weapons;
 
 public class Axe extends Weapon {
-    public static int stock = 2;
+    public static int stock = 1;
 
     private Axe() {
         super(2, 0);

@@ -3,7 +3,7 @@ package weapons;
 
 public class WeaponFactory {
     
-    public Weapon buildWeapon(WeaponClasses weaponName) {
+    public static Weapon buildWeapon(WeaponClasses weaponName) {
         switch (weaponName) {
             case PAN:
                 return Pan.instantiate();

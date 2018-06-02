@@ -5,6 +5,9 @@ public class Horde {
     private int maxRespawn; // Attack cooldown
     private int respawn;
 
+    public Horde() {
+        this(5);
+    }
     public Horde(int respawn) {
         this.maxRespawn = this.respawn = respawn;
     }

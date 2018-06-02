@@ -270,12 +270,10 @@ public class Zombicide {
     }
 
     public static void rollWeapons() {
-        WeaponFactory factory = new WeaponFactory();
-
         for (Survivor s : myTeam) {
             // Make sure everyone has a weapon
             while (s.getWeapon() == null) {
-                s.setWeapon(factory.buildWeapon(WeaponClasses.values()[(int)(Math.random() * WeaponClasses.values().length)]));
+                s.setWeapon(WeaponFactory.buildWeapon(WeaponClasses.values()[(int)(Math.random() * WeaponClasses.values().length)]));
             }
         }
     }

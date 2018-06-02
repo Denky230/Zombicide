@@ -7,21 +7,28 @@ public abstract class Zombie {
     private final int health;
     private final int damage;
     private final int speed;
+    private final Horde horde;
 
     public Zombie(int health, int damage, int speed) {
         this.health = health;
         this.damage = damage;
         this.speed = speed;
+        
+        this.horde = new Horde();
+        horde.walk();
    }
 
     public int getHealth() {
-        return health;
+        return this.health;
     }
     public int getDamage() {
-        return damage;
+        return this.damage;
     }
     public int getSpeed() {
-        return speed;
+        return this.speed;
+    }
+    public Horde getHorde() {
+        return this.horde;
     }
 
     public void hit(Survivor survivor) {
